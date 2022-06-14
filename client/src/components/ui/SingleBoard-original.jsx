@@ -1,16 +1,10 @@
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import React from "react";
-
-const SingleBoard = () => {
-  const { id } = useParams();
-  const board = useSelector((state) => state.boards).find((board) => board._id === id);
-  console.log(board);
+const SingleBoardOriginal = () => {
   return (
     <>
        <header>
         <ul>
-          <li id="title">{board.title}</li>
+          <li id="title">My Title</li>
           <li className="star-icon icon"></li>
           <li className="private private-icon icon">Private</li>
         </ul>
@@ -336,4 +330,4 @@ const SingleBoard = () => {
   );
 };
 
-export default SingleBoard;
+export default SingleBoardOriginal;

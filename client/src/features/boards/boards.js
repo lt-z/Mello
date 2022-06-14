@@ -1,15 +1,15 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import apiClient from "../../lib/ApiClient";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import apiClient from '../../lib/ApiClient';
 
 const initialState = [];
 
-export const fetchBoards = createAsyncThunk("boards/fetchBoards", async () => {
+export const fetchBoards = createAsyncThunk('boards/fetchBoards', async () => {
   const data = await apiClient.getBoards();
   return data;
 });
 
 export const createBoard = createAsyncThunk(
-  "boards/createBoard",
+  'boards/createBoard',
   async (newBoard, callback) => {
     const data = await apiClient.createBoard(newBoard);
     if (callback) {
@@ -19,8 +19,13 @@ export const createBoard = createAsyncThunk(
   }
 );
 
+// export const fetchBoard = createAsyncThunk('boards/fetchBoard', async (id) => {
+//   const data = await apiClient.getBoard(id);
+//   return data;
+// });
+
 const boardSlice = createSlice({
-  name: "boards",
+  name: 'boards',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
