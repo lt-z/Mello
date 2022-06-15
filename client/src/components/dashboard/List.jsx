@@ -1,15 +1,52 @@
 import React, { useState }  from "react";
-import { useDispatch } from "react-redux"
+// import { useDispatch } from "react-redux"
 
 
 const List = ({title}) => {
+  const [listTitleText, setListTitleText] = useState(title)
+  const [listTitleConfirmed, setListTitleConfirmed] = useState(true)
+
+  const handleListTitleClick = (e) => {
+    e.preventDefault()
+    setListTitleConfirmed(false)
+  }
+
+  const renderListTitleLine = () => {
+    if (listTitleConfirmed) {
+      return (
+        <p className="list-title" onClick={handleListTitleClick}>{listTitleText}</p>
+        )
+    }
+    return (
+      <input className="list-title" onChange={handleTitleTextChange} onKeyDown={handleListTitleSubmitEnterKey} value={listTitleText} onBlur={handleBlur} />
+    )
+  }
+
+  const handleListTitleSubmitEnterKey = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      // TODO: dispatch()
+      setListTitleConfirmed(true)
+    }
+  }
+
+  const handleBlur = () => {
+    // TODO: dispatch()
+    setListTitleConfirmed(true)
+  }
+  
+  const handleTitleTextChange = (e) => {
+    e.preventDefault()
+    setListTitleText(e.target.value)
+  }
+
   return (
     <div className="list-wrapper">
       <div className="list-background">
         <div className="list">
           <a className="more-icon sm-icon" href=""></a>
           <div>
-            <p className="list-title">{title}</p>
+            {renderListTitleLine()}
           </div>
           <div className="add-dropdown add-top">
             <div className="card"></div>
