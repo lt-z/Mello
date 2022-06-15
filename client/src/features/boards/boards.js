@@ -13,7 +13,18 @@ export const createBoard = createAsyncThunk(
   async (newBoard, callback) => {
     const data = await apiClient.createBoard(newBoard);
     if (callback) {
-      callback;
+      callback();
+    }
+    return data;
+  }
+);
+
+export const createList = createAsyncThunk(
+  'boards/createList',
+  async (newList, callback) => {
+    const data = await apiClient.createList(newList);
+    if (callback) {
+      callback();
     }
     return data;
   }

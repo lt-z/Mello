@@ -1,8 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import React, {useEffect}  from "react";
-import { fetchBoard } from "../../features/boards/boards"
+import React, {useState, useEffect}  from "react";
+import { fetchBoard, createList } from "../../features/boards/boards"
 import List from "../dashboard/List"
+
 
 const SingleBoard = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,31 @@ const SingleBoard = () => {
   useEffect(() => {
     dispatch(fetchBoard(id));
   }, [dispatch, id]);
+
+  const [newListClass, setNewListClass] = useState("new-list")
+  const [listTitle, setListTitle] = useState("")
+
+  const handleListTitleChange = (e) => {
+    e.preventDefault()
+    setListTitle(e.target.value)
+  }
+
+  const handleAddAListSave = async (e) => {
+    e.preventDefault()
+    setNewListClass("new-list")
+    await dispatch(createList({
+      boardId: id,
+      list: {
+        title: listTitle
+      }
+    }))
+    dispatch(fetchBoard(id));
+  }
+
+  const handleXClickFromAddAList = (e) => {
+    e.preventDefault()
+    setNewListClass("new-list")
+  }
 
   return (board === undefined || board.lists === undefined) ? null : (
     <>
@@ -35,12 +61,12 @@ const SingleBoard = () => {
             < List key={list._id} title={list.title} />
             ))}
           </div>
-          <div id="new-list" className="new-list">
-            <span>Add a list...</span>
-            <input type="text" placeholder="Add a list..." />
+          <div id="new-list" className={newListClass}>
+            <span onClick={() => setNewListClass('new-list selected')}>Add a list...</span>
+            <input type="text" onChange={handleListTitleChange} placeholder="Add a list..." value={listTitle}/>
             <div>
-              <input type="submit" className="button" value="Save" />
-              <i className="x-icon icon"></i>
+              <input type="submit" className="button" value="Save" onClick={handleAddAListSave}/>
+              <i className="x-icon icon" onClick={handleXClickFromAddAList}></i>
             </div>
           </div>
         </div>

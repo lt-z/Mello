@@ -31,6 +31,14 @@ const apiClient = {
       logError(e);
     }
   },
+  createList: async (boardObj) => {
+    try {
+      const { data } = await axios.post(routes.CREATE_LIST_URL, boardObj);
+      return data;
+    } catch (e) {
+      logError(e);
+    }
+  },
   createBoard: async (board) => {
     try {
       const { data } = await axios.post(routes.CREATE_BOARD_URL, { board });
