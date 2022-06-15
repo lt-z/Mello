@@ -8,21 +8,24 @@ const getBoards = (req, res, next) => {
   });
 };
 
-const getBoard = (req, res, next) => {
+const getBoard = async (req, res, next) => {
   const { id } = req.params;
-  Board.findById(id)
-    .then((board) => {
-      res.json(board);
-    })
-    .catch((err) => {
-      next(new HttpError('Invalid board id provided', 500));
-    });
+  try {
+    const board = await Board.findById(id).populate('lists');
+    res.json(board);
+  } catch (err) {
+    next(new HttpError('Invalid board id provided', 500));
+  }
 };
 
 const createBoard = (req, res, next) => {
   const errors = validationResult(req);
+
   if (errors.isEmpty()) {
-    Board.create(req.body.board)
+    Board.create({
+      title: req.body.board.title,
+      lists: [],
+    })
       .then((board) => {
         res.json({
           title: board.title,

@@ -8,7 +8,6 @@ router.get('/boards', boardsController.getBoards);
 router.get('/boards/:id', boardsController.getBoard);
 router.post('/boards', validateBoard, boardsController.createBoard);
 
-router.get('/lists', listsController.getLists);
 router.post('/lists', validateList, listsController.createList);
 
 module.exports = router;

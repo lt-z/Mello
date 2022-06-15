@@ -1,40 +1,37 @@
 const List = require('../models/list');
+const Board = require('../models/board');
+
 const HttpError = require('../models/httpError');
 const { validationResult } = require('express-validator');
-const mongoose = require('mongoose');
 
-const getLists = (req, res, next) => {
-  List.find({}, 'title _id createdAt updatedAt').then((lists) => {
-    res.json(lists);
-  });
-};
-
-const createList = (req, res, next) => {
+const createList = async (req, res, next) => {
   const errors = validationResult(req);
+
   if (errors.isEmpty()) {
-    List.create({
+    const newList = new List({
       title: req.body.list.title,
       boardId: req.body.boardId,
-    })
-      .then((list) => {
-        res.json({
-          _id: list._id,
-          title: list.title,
-          boardId: list.boardId,
-          createdAt: list.createdAt,
-          updatedAt: list.updatedAt,
-          position: list.position,
-        });
-      })
-      .catch((err) =>
-        next(
-          new HttpError('Creating list failed, please try again: ' + err, 500)
-        )
-      );
+    });
+    try {
+      const savedList = await newList.save();
+      const board = await Board.findById(req.body.boardId);
+      board.lists = board.lists.concat(savedList._id);
+      await board.save();
+
+      res.json({
+        _id: savedList._id,
+        title: savedList.title,
+        boardId: savedList.boardId,
+        createdAt: savedList.createdAt,
+        updatedAt: savedList.updatedAt,
+        position: savedList.position,
+      });
+    } catch (err) {
+      new HttpError('Creating list failed, please try again: ' + err, 500);
+    }
   } else {
     return next(new HttpError('The input field is empty.', 422));
   }
 };
 
-exports.getLists = getLists;
 exports.createList = createList;

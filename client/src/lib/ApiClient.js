@@ -23,14 +23,14 @@ const apiClient = {
       logError(e);
     }
   },
-  // getBoard: async (id) => {
-  //   try {
-  //     const { data } = await axios.get(routes.BOARDS_INDEX_URL + '/' + id);
-  //     return data;
-  //   } catch (e) {
-  //     logError(e);
-  //   }
-  // },
+  getBoard: async (id) => {
+    try {
+      const { data } = await axios.get(routes.BOARDS_INDEX_URL + '/' + id);
+      return data;
+    } catch (e) {
+      logError(e);
+    }
+  },
   createBoard: async (board) => {
     try {
       const { data } = await axios.post(routes.CREATE_BOARD_URL, { board });
