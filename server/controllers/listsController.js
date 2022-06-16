@@ -34,4 +34,29 @@ const createList = async (req, res, next) => {
   }
 };
 
+const updateList = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (errors.isEmpty()) {
+    try {
+      const currList= await List.findByIdAndUpdate(req.params.id, req.body, {new: true});
+      await currList.save();
+
+      // res.json({cards, ...currList})
+      res.json({
+        _id: currList._id,
+        title: currList.title,
+        boardId: currList.boardId,
+        createdAt: currList.createdAt,
+        updatedAt: currList.updatedAt,
+        position: currList.position,
+      });
+    } catch (err) {
+      next(new HttpError('Error: ' + err, 500));
+    }
+  } else {
+    return next(new HttpError('The title field is empty.', 422));
+  }
+};
+
 exports.createList = createList;
+exports.updateList = updateList;

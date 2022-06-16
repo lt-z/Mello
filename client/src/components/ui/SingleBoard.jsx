@@ -9,6 +9,7 @@ const SingleBoard = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const board = useSelector((state) => state.boards).find((b) => b._id === id);
+  const lists = useSelector((state) => state.lists).filter((l) => l.boardId === id);
 
   useEffect(() => {
     dispatch(fetchBoard(id));
@@ -39,7 +40,7 @@ const SingleBoard = () => {
     setNewListClass("new-list")
   }
 
-  return (board === undefined || board.lists === undefined) ? null : (
+  return (board === undefined || lists === undefined) ? null : (
     <>
        <header>
         <ul>
@@ -57,8 +58,8 @@ const SingleBoard = () => {
       <main>
         <div id="list-container" className="list-container">
           <div id="existing-lists" className="existing-lists">
-          {board.lists.map((list) => (
-            < List key={list._id} title={list.title} />
+          {lists.map((list) => (
+            < List key={list._id} lst={list} />
             ))}
           </div>
           <div id="new-list" className={newListClass}>

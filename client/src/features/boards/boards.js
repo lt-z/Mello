@@ -30,10 +30,17 @@ export const createList = createAsyncThunk(
   }
 );
 
+// need 3 different reducers
 export const fetchBoard = createAsyncThunk('boards/fetchBoard', async (id) => {
   const data = await apiClient.getBoard(id);
   return data;
 });
+
+export const editList = createAsyncThunk('boards/editList', async (args) => {
+  const { id, updatedList } = args;
+  const data = await apiClient.editList(id, updatedList)
+  return data
+} )
 
 const boardSlice = createSlice({
   name: 'boards',
@@ -42,20 +49,33 @@ const boardSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchBoards.fulfilled, (state, action) => {
       return action.payload;
-      // return action.payload.reduce((acc, comm) => {
-      //   //eslint-disable-next-line
-      //   const { lists, ...boardWithoutLists } = comm;
-      //   return acc.concat(boardWithoutLists);
-      // }, []);
     }),
       builder.addCase(createBoard.fulfilled, (state, action) => {
         state.push(action.payload);
       }),
       builder.addCase(fetchBoard.fulfilled, (state, action) => {
-        let st = state.filter((b) => b._id !== action.payload._id);
-        return st.concat(action.payload);
-      });
-  },
+        // eslint-disable-next-line
+        const {lists, ...boardWithoutLists } = action.payload;
+        const filteredList = state.filter((b) => b._id !== action.payload._id);
+        return filteredList.concat(boardWithoutLists);
+      })
+    },
 });
 
 export default boardSlice.reducer;
+
+/*
+on hard refresh ->
+state = {
+  empty state
+}
+
+/boards/2
+API.fetchBoard(2)
+  * Need a guard clause in the component.
+  * Once we get it:
+  * Check if it is in the state
+  * If found -> return state.
+  * Else ->
+  *  F
+*/

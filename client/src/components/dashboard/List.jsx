@@ -1,8 +1,10 @@
 import React, { useState }  from "react";
-// import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
+import { editList } from "../../features/boards/boards";
 
-
-const List = ({title}) => {
+const List = ({lst}) => {
+  const title = lst.title
+  const dispatch = useDispatch()
   const [listTitleText, setListTitleText] = useState(title)
   const [listTitleConfirmed, setListTitleConfirmed] = useState(true)
 
@@ -25,13 +27,13 @@ const List = ({title}) => {
   const handleListTitleSubmitEnterKey = (e) => {
     if (e.key === "Enter") {
       e.preventDefault()
-      // TODO: dispatch()
+      dispatch(editList({id: lst._id, updatedList: {...lst, title: listTitleText}}))
       setListTitleConfirmed(true)
     }
   }
 
   const handleBlur = () => {
-    // TODO: dispatch()
+    dispatch(editList({id: lst._id, updatedList: {...lst, title: listTitleText}}))
     setListTitleConfirmed(true)
   }
   

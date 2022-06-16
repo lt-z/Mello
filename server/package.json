@@ -16,7 +16,8 @@
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "express-validator": "^6.6.1",
-    "mongoose": "^5.3.6"
+    "mongoose": "^5.3.6",
+    "webpack": "^5.73.0"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
