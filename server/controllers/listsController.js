@@ -11,13 +11,14 @@ const createList = async (req, res, next) => {
     const newList = new List({
       title: req.body.list.title,
       boardId: req.body.boardId,
+      cards: [],
     });
     try {
       const savedList = await newList.save();
       const board = await Board.findById(req.body.boardId);
       board.lists = board.lists.concat(savedList._id);
       await board.save();
-
+      console.log(savedList);
       res.json({
         _id: savedList._id,
         title: savedList.title,
@@ -38,7 +39,9 @@ const updateList = async (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     try {
-      const currList= await List.findByIdAndUpdate(req.params.id, req.body, {new: true});
+      const currList = await List.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+      });
       await currList.save();
 
       // res.json({cards, ...currList})

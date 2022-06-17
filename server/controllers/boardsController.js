@@ -1,4 +1,5 @@
 const Board = require('../models/board');
+
 const HttpError = require('../models/httpError');
 const { validationResult } = require('express-validator');
 
@@ -11,10 +12,13 @@ const getBoards = (req, res, next) => {
 const getBoard = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const board = await Board.findById(id).populate('lists');
+    const board = await Board.findById(id).populate({
+      path: 'lists',
+      populate: { path: 'cards' },
+    });
     res.json(board);
   } catch (err) {
-    next(new HttpError('Invalid board id provided', 500));
+    next(new HttpError('Invalid board id provided' + err, 500));
   }
 };
 

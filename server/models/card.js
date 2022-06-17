@@ -6,15 +6,16 @@ const CardSchema = new Schema({
     type: String,
     required: [true, 'The Card title is required'],
   },
-  dueDate: Date,
+  dueDate: { type: Date, default: null },
   labels: Array,
-  description: String,
+  description: { type: String, default: '' },
   listId: { type: Schema.Types.ObjectId, ref: 'List' },
   boardId: { type: Schema.Types.ObjectId, ref: 'Board' },
-  position: Number,
-  completed: Boolean,
+  position: { type: Number, default: 65535.0 },
+  completed: { type: Boolean, default: false },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   actions: [{ type: Schema.Types.ObjectId, ref: 'Action' }], // TODO: What are actions?
+  archived: { type: Boolean, default: false },
 });
 
 CardSchema.set('timestamps', true);
