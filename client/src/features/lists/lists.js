@@ -11,10 +11,11 @@ const listSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchBoard.fulfilled, (state, action) => {
       const { lists } = action.payload;
-      lists.forEach(list => delete list.cards);
-      const filteredList = state.filter((list) => list.boardId !== lists.boardId);
+      const filteredList = state.filter(
+        (list) => list.boardId !== action.payload._id
+      );
       return filteredList.concat(lists);
-    })
+    });
   },
 });
 
@@ -26,6 +27,5 @@ state: {
   lists: [{ a list of all the lists}],
   cards: [{ a list of all the cards}],
 }
-
 
 */

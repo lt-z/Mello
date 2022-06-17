@@ -39,12 +39,20 @@ const apiClient = {
       logError(e);
     }
   },
+  createCard: async (cardObj) => {
+    try {
+      const { data } = await axios.post(routes.CREATE_LIST_URL, boardObj);
+      return data;
+    } catch (e) {
+      logError(e);
+    }
+  },
   editList: async (id, lst) => {
     try {
-      const { data } = await axios.put(routes.UPDATE_LIST_URL + id, lst)
-      return data
+      const { data } = await axios.put(routes.UPDATE_LIST_URL + id, lst);
+      return data;
     } catch (e) {
-      logError(e)
+      logError(e);
     }
   },
   createBoard: async (board) => {

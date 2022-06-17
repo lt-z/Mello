@@ -62,6 +62,7 @@ const List = ({lst}) => {
             <div className="card-background">
               <div className="card ">
                 <i className="edit-toggle edit-icon sm-icon"></i>
+                
                 <div className="card-info">
                   <div className="card-label green colorblindable"></div>
                   <div className="card-label yellow colorblindable"></div>

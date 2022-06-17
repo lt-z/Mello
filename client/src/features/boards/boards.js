@@ -38,9 +38,9 @@ export const fetchBoard = createAsyncThunk('boards/fetchBoard', async (id) => {
 
 export const editList = createAsyncThunk('boards/editList', async (args) => {
   const { id, updatedList } = args;
-  const data = await apiClient.editList(id, updatedList)
-  return data
-} )
+  const data = await apiClient.editList(id, updatedList);
+  return data;
+});
 
 const boardSlice = createSlice({
   name: 'boards',
@@ -55,11 +55,11 @@ const boardSlice = createSlice({
       }),
       builder.addCase(fetchBoard.fulfilled, (state, action) => {
         // eslint-disable-next-line
-        const {lists, ...boardWithoutLists } = action.payload;
+        const { lists, ...boardWithoutLists } = action.payload;
         const filteredList = state.filter((b) => b._id !== action.payload._id);
         return filteredList.concat(boardWithoutLists);
-      })
-    },
+      });
+  },
 });
 
 export default boardSlice.reducer;
