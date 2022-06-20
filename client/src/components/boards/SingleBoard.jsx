@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import React, {useState, useEffect}  from "react";
-import { fetchBoard, createList } from "../../features/boards/boards"
-import List from "../dashboard/List"
-
+import { fetchBoard } from "../../features/boards/boards"
+import { createList } from "../../features/lists/lists"
+import List from "../lists/List"
 
 const SingleBoard = () => {
   const dispatch = useDispatch();
@@ -25,14 +25,14 @@ const SingleBoard = () => {
 
   const handleAddAListSave = async (e) => {
     e.preventDefault()
-    setNewListClass("new-list")
-    await dispatch(createList({
+     // TODO: callback function to handle setting class. only if it is successful.
+    const newList = {
       boardId: id,
       list: {
         title: listTitle
       }
-    }))
-    dispatch(fetchBoard(id));
+    }
+    await dispatch(createList({newList, setNewListClass}))
   }
 
   const handleXClickFromAddAList = (e) => {

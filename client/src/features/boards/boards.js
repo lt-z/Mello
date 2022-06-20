@@ -19,18 +19,6 @@ export const createBoard = createAsyncThunk(
   }
 );
 
-export const createList = createAsyncThunk(
-  'boards/createList',
-  async (newList, callback) => {
-    const data = await apiClient.createList(newList);
-    if (callback) {
-      callback();
-    }
-    return data;
-  }
-);
-
-// need 3 different reducers
 export const fetchBoard = createAsyncThunk('boards/fetchBoard', async (id) => {
   const data = await apiClient.getBoard(id);
   return data;

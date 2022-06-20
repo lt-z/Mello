@@ -4,6 +4,17 @@ import { fetchBoard } from '../boards/boards';
 
 const initialState = [];
 
+export const createList = createAsyncThunk('lists/createList', async (args) => {
+  // TODO: handle empty input
+  const { newList, setNewListClass: callback } = args;
+
+  const data = await apiClient.createList(newList);
+  if (callback) {
+    callback('new-list');
+  }
+  return data;
+});
+
 const listSlice = createSlice({
   name: 'lists',
   initialState,
@@ -15,7 +26,10 @@ const listSlice = createSlice({
         (list) => list.boardId !== action.payload._id
       );
       return filteredList.concat(lists);
-    });
+    }),
+      builder.addCase(createList.fulfilled, (state, action) => {
+        return state.concat(action.payload);
+      });
   },
 });
 

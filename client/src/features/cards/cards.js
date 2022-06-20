@@ -4,8 +4,21 @@ import { fetchBoard } from '../boards/boards';
 
 const initialState = [];
 
-const fetchCard = createAsyncThunk('cards/fetchCard', async (id) => {
+export const fetchCard = createAsyncThunk('cards/fetchCard', async (id) => {
   const data = await apiClient.getCard(id);
+  return data;
+});
+
+export const createCard = createAsyncThunk('cards/createCard', async (args) => {
+  const { newCard, setCardTitle, toggleAddCard } = args;
+  const data = await apiClient.createCard(newCard);
+
+  if (setCardTitle) {
+    setCardTitle('');
+  }
+  if (toggleAddCard) {
+    toggleAddCard();
+  }
   return data;
 });
 
@@ -27,6 +40,9 @@ const cardSlice = createSlice({
       builder.addCase(fetchCard.fulfilled, (state, action) => {
         const st = state.filter((card) => card._id !== action.payload._id);
         return st.concat(action.payload);
+      }),
+      builder.addCase(createCard.fulfilled, (state, action) => {
+        return state.concat(action.payload);
       });
   },
 });

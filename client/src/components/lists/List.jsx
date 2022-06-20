@@ -1,16 +1,41 @@
 import React, { useState }  from "react";
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { editList } from "../../features/boards/boards";
+import ListCard from "../cards/ListCard";
+import { createCard } from "../../features/cards/cards"
 
 const List = ({lst}) => {
   const title = lst.title
   const dispatch = useDispatch()
   const [listTitleText, setListTitleText] = useState(title)
   const [listTitleConfirmed, setListTitleConfirmed] = useState(true)
+  const cards = useSelector((state) => state.cards).filter((card) => card.listId === lst._id);
+  const [showAddCard, setShowAddCard] = useState(false);
+  const toggleAddCard = () => setShowAddCard(!showAddCard);
+
+  const listWrapperClass = showAddCard ? "list-wrapper add-dropdown-active" : "list-wrapper";
+  const dropDownClass = showAddCard ? "add-dropdown add-bottom active-card" : "add-dropdown add-bottom";
+  const [cardTitle, setCardTitle] = useState("") 
 
   const handleListTitleClick = (e) => {
+    e.preventDefault();
+    setListTitleConfirmed(false);
+  }
+  
+  const handleTextChange = (e) => {
+    e.preventDefault();
+    setCardTitle(e.target.value)
+  }
+
+  const handleAddCardSubmit = (e) => {
     e.preventDefault()
-    setListTitleConfirmed(false)
+    const newCard = {
+      listId: lst._id,
+      card: {
+        title: cardTitle,
+      }
+    }
+    dispatch(createCard({newCard, setCardTitle, toggleAddCard}))
   }
 
   const renderListTitleLine = () => {
@@ -43,7 +68,7 @@ const List = ({lst}) => {
   }
 
   return (
-    <div className="list-wrapper">
+    <div className={listWrapperClass}>
       <div className="list-background">
         <div className="list">
           <a className="more-icon sm-icon" href=""></a>
@@ -59,6 +84,7 @@ const List = ({lst}) => {
             </div>
           </div>
           <div id="cards-container" data-id="list-1-cards">
+            {cards.map((card) => < ListCard key={card._id} card={card} />)}
             <div className="card-background">
               <div className="card ">
                 <i className="edit-toggle edit-icon sm-icon"></i>
@@ -111,19 +137,19 @@ const List = ({lst}) => {
               </div>
             </div>
           </div>
-          <div className="add-dropdown add-bottom">
+          <div className={dropDownClass}>
             <div className="card">
               <div className="card-info"></div>
-              <textarea name="add-card"></textarea>
+              <textarea name="add-card" onChange={handleTextChange} value={cardTitle}></textarea>
               <div className="members"></div>
             </div>
-            <a className="button">Add</a>
-            <i className="x-icon icon"></i>
+            <a className="button" onClick={handleAddCardSubmit}>Add</a>
+            <i className="x-icon icon" onClick={toggleAddCard}></i>
             <div className="add-options">
               <span>...</span>
             </div>
           </div>
-          <div className="add-card-toggle" data-position="bottom">
+          <div className="add-card-toggle" data-position="bottom" onClick={toggleAddCard}>
             Add a card...
           </div>
         </div>
