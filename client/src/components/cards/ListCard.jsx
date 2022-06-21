@@ -1,17 +1,13 @@
 import React, { useState} from "react";
-import CardModal from "./CardModal";
+import { useHistory } from 'react-router-dom';
 
 const ListCard = ({ card }) => {
-  const [showModal, setshowModal] = useState(false);
+  const history = useHistory();
+  const handleCardModal = () => history.push(`/cards/${card._id}`);
 
-  const toggleModal = (e) => {
-    e.preventDefault();
-    setshowModal(!showModal);
-  }
-
-  return showModal ? <CardModal id={card._id} /> : (
+  return (
     <div className="card-background">
-      <div className="card" onClick={toggleModal}>
+      <div className="card" onClick={handleCardModal}>
         <i className="edit-toggle edit-icon sm-icon"></i>
         <div className="card-info">
           <p>{card.title}</p>

@@ -14,8 +14,10 @@ import LabelsPopover from "./ui/LabelsPopover";
 import MoveCardPopover from "./ui/MoveCardPopover";
 import SingleBoardOriginal from "./ui/SingleBoard-original";
 import SingleBoard from "./boards/SingleBoard";
+import CardModal from "./cards/CardModal";
 
 const Application = () => {
+
   return (
     <div>
       <TopNav />
@@ -35,6 +37,8 @@ const Application = () => {
       <Route path="/ui/moveCardPopover" component={MoveCardPopover} />
       <Route path="/ui/singleBoard" component={SingleBoardOriginal} />
       <Route path="/boards/:id" component={SingleBoard} />
+      <Route path="/cards/:id" component={CardModal} />
+      <Route path="/cards/:id" component={SingleBoard} />
     </div>
   );
 };

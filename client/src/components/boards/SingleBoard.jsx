@@ -1,19 +1,34 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import React, {useState, useEffect}  from "react";
 import { fetchBoard } from "../../features/boards/boards"
 import { createList } from "../../features/lists/lists"
 import List from "../lists/List"
 
 const SingleBoard = () => {
+  let location = useLocation();
   const dispatch = useDispatch();
   const { id } = useParams();
   const board = useSelector((state) => state.boards).find((b) => b._id === id);
   const lists = useSelector((state) => state.lists).filter((l) => l.boardId === id);
+  const cards = useSelector((state) => state.cards);
+
+  let boardId;
+
+  if (location.pathname.startsWith('/boards')) {
+    boardId = id;
+  } else {
+    const card = cards.find((c) => c._id === id);
+    if (card) {
+      boardId = card.boardId;
+    }
+  }
 
   useEffect(() => {
-    dispatch(fetchBoard(id));
-  }, [dispatch, id]);
+    if (boardId) {
+      dispatch(fetchBoard(boardId))
+    }
+  }, [dispatch, boardId]);
 
   const [newListClass, setNewListClass] = useState("new-list")
   const [listTitle, setListTitle] = useState("")

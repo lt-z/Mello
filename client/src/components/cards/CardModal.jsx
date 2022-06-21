@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect }  from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from 'react-router-dom';
+import { fetchCard } from "../../features/cards/cards";
 
-const CardModal = ({ id }) => {
+const CardModal = () => {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  const list = useSelector((state) => state.lists).find((lst) => lst.cards.some(card => card._id === id));
   const card = useSelector((state) => state.cards).find((card) => card._id === id);
-  const list = useSelector((state) => state.lists).find((list) => list._id === card.listId)
 
-  return (
+  useEffect(() => {
+    dispatch(fetchCard(id));
+  }, [dispatch, id]);
+
+  return (card === undefined || list === undefined) ? null : (
     <div id="modal-container">
       <div className="screen"></div>
       <div id="modal">

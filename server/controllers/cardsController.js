@@ -8,13 +8,14 @@ const createCard = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (errors.isEmpty()) {
-    const newCard = new Card({
-      title: req.body.card.title,
-      listId: req.body.listId,
-    });
     try {
-      const savedCard = await newCard.save();
       const list = await List.findById(req.body.listId);
+      const newCard = new Card({
+        title: req.body.card.title,
+        listId: req.body.listId,
+        boardId: list.boardId,
+      });
+      const savedCard = await newCard.save();
       list.cards = list.cards.concat(savedCard._id);
       await list.save();
       res.json(savedCard);
@@ -33,7 +34,7 @@ const getCard = async (req, res, next) => {
     const card = await Card.findById(id); // TODO: .populate('actions');
     res.json(card);
   } catch (err) {
-    next(new HttpError('Invalid card id provided' + err, 500));
+    next(new HttpError('Invalid card id provided' + err, 404));
   }
 };
 
