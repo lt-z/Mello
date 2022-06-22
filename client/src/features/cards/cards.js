@@ -28,14 +28,14 @@ const cardSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchBoard.fulfilled, (state, action) => {
+      const filterCards = state.filter(
+        (card) => card.boardId !== action.payload._id
+      );
       const cards = action.payload.lists.reduce((prev, curr) => {
         prev = prev.concat(...curr['cards']);
         return prev;
       }, []);
-      const st = state.filter(
-        (card) => card.listId !== action.payload.lists._id
-      );
-      return st.concat(...cards);
+      return filterCards.concat(...cards);
     }),
       builder.addCase(fetchCard.fulfilled, (state, action) => {
         const st = state.filter((card) => card._id !== action.payload._id);

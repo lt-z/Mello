@@ -42,7 +42,7 @@ const List = ({lst}) => {
     if (listTitleConfirmed) {
       return (
         <p className="list-title" onClick={handleListTitleClick}>{listTitleText}</p>
-        )
+      )
     }
     return (
       <input className="list-title" onChange={handleTitleTextChange} onKeyDown={handleListTitleSubmitEnterKey} value={listTitleText} onBlur={handleBlur} />
