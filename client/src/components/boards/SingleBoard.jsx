@@ -6,14 +6,11 @@ import { createList } from "../../features/lists/lists"
 import List from "../lists/List"
 
 const SingleBoard = () => {
+  let boardId;
   let location = useLocation();
   const dispatch = useDispatch();
   const { id } = useParams();
-  const board = useSelector((state) => state.boards).find((b) => b._id === id);
-  const lists = useSelector((state) => state.lists).filter((l) => l.boardId === id);
   const cards = useSelector((state) => state.cards);
-
-  let boardId;
 
   if (location.pathname.startsWith('/boards')) {
     boardId = id;
@@ -54,6 +51,8 @@ const SingleBoard = () => {
     e.preventDefault()
     setNewListClass("new-list")
   }
+  const board = useSelector((state) => state.boards).find((b) => b._id === boardId);
+  const lists = useSelector((state) => state.lists).filter((l) => l.boardId === boardId);
 
   return (board === undefined || lists === undefined) ? null : (
     <>
@@ -171,8 +170,6 @@ const SingleBoard = () => {
           </div>
         </div>
       </div>
-      <div id="modal-container"></div>
-      <div id="dropdown-container"></div>
     </>
   );
 };

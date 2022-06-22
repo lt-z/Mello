@@ -1,6 +1,7 @@
 const List = require('../models/list');
 const Board = require('../models/board');
 const Card = require('../models/card');
+const Action = require('../models/action');
 const HttpError = require('../models/httpError');
 const { validationResult } = require('express-validator');
 
@@ -38,5 +39,29 @@ const getCard = async (req, res, next) => {
   }
 };
 
+const updateCard = async (req, res, next) => {
+  try {
+    const { dueDate, completed, listId, archived, ...remaining } = req.body.card;
+    console.log(req.body.card);
+    console.log(remaining);
+
+    const newAction = new Action({
+      ...req.body.card,
+      cardId: req.params.id,
+    });
+    console.log(remaining);
+
+    const savedAction = await newAction.save();
+    const card = await Card.findById(req.params.id);
+    card.actions = card.actions.concat(savedAction)
+    await card.save();
+
+    res.json(card);
+  } catch(e) {
+    new HttpError('Updating card failed, please try again: ' + e, 500)
+  }
+}
+
 exports.createCard = createCard;
 exports.getCard = getCard;
+exports.updateCard = updateCard;

@@ -14,7 +14,7 @@ const CardSchema = new Schema({
   position: { type: Number, default: 65535.0 },
   completed: { type: Boolean, default: false },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
-  actions: [{ type: Schema.Types.ObjectId, ref: 'Action' }], // TODO: What are actions?
+  actions: [{ type: Schema.Types.ObjectId, ref: 'Action' }],
   archived: { type: Boolean, default: false },
 });
 
