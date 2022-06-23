@@ -32,7 +32,8 @@ const createCard = async (req, res, next) => {
 const getCard = async (req, res, next) => {
   const { id } = req.params;
   try {
-    await Card.findById(id);
+    const card = await Card.findById(id);
+    res.json(card);
   } catch (err) {
     next(new HttpError('Invalid card id provided' + err, 404));
   }

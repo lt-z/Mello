@@ -12,6 +12,7 @@ const CardModal = () => {
 
   const list = useSelector((state) => state.lists).find((lst) => lst.cards.some(card => card._id === id));
   const card = useSelector((state) => state.cards).find((card) => card._id === id);
+  const cardTitle = card?.title || "";
 
   const handleCloseClick = () => history.push(`/boards/${card.boardId}`)
 
@@ -27,7 +28,7 @@ const CardModal = () => {
         <header>
           <i className="card-icon icon .close-modal"></i>
           <textarea className="list-title" style={{ height: "45px" }}>
-            {card.title}
+            {cardTitle}
           </textarea>
           <p>
             in list <a className="link">{list.title}</a>
