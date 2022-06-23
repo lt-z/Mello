@@ -32,8 +32,7 @@ const createCard = async (req, res, next) => {
 const getCard = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const card = await Card.findById(id); // TODO: .populate('actions');
-    res.json(card);
+    await Card.findById(id);
   } catch (err) {
     next(new HttpError('Invalid card id provided' + err, 404));
   }
@@ -41,64 +40,69 @@ const getCard = async (req, res, next) => {
 
 const updateCard = async (req, res, next) => {
   try {
-    const { dueDate, completed, listId, archived, ...remaining } = req.body.card;
+    const updatedCard = await Card.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body.card, $push: { actions: req.action._id } },
+      {
+        new: true,
+      }
+    );
 
-    const card = await Card.findById(req.params.id);
-    console.log('Card', card);
-    const actionList = action(dueDate, completed, listId, archived, card);
-    actionList.forEach(async (action) => {
-      const newAction = new Action({
-        description: action,
-        cardId: req.params.id,
-      });
-      const savedAction = await newAction.save();
-      card.actions = card.actions.concat(savedAction)
-      await card.save();
-    })
-    card = {...card, ...req.body.card};
-    console.log(card);
-    console.log('req.body.card:')
-    console.log(req.body.card)
-    await card.save();
-    console.log('RESPONSE', card);
-    res.json(card);
-  } catch(e) {
-    new HttpError('Updating card failed, please try again: ' + e, 500)
+    res.json(updatedCard);
+  } catch (e) {
+    new HttpError('Updating card failed, please try again: ' + e, 500);
   }
-}
+};
+
+const updateCardActions = async (req, res, next) => {
+  try {
+    const { dueDate, completed, listId, archived } = req.body.card;
+    const card = await Card.findById(req.params.id);
+
+    const actionDescription = action(
+      dueDate,
+      completed,
+      listId,
+      archived,
+      card
+    );
+    const newAction = await Action.create({
+      description: actionDescription,
+      cardId: req.params.id,
+    });
+    req.action = newAction;
+    next();
+  } catch (e) {
+    new HttpError('Updating card failed, please try again: ' + e, 500);
+  }
+};
 
 const action = (dueDate, completed, listId, archived, card) => {
-  let actionList = []
-
-  if (dueDate && card.dueDate === null) { 
-    actionList.push('Added a due date')
+  if (dueDate && card.dueDate === null) {
+    return 'Added a due date';
   }
   if (dueDate !== undefined && dueDate === null && card.dueDate) {
-    actionList.push('Removed the due date')
+    return 'Removed the due date';
   }
   if (dueDate !== undefined && dueDate !== card.dueDate) {
-    actionList.push('Due date changed')
+    return 'Due date changed';
   }
-
   if (completed !== undefined && completed !== card.completed) {
-    actionList.push('Marked the due date complete')
+    return 'Marked the due date complete';
   }
   if (listId !== undefined && listId !== card.listId) {
-    actionList.push('Added this card to my list')
+    return 'Added this card to my list';
   }
   if (archived !== undefined && !archived) {
-    actionList.push('Card was taken out of archive')
+    return 'Card was taken out of archive';
   }
   if (archived !== undefined && archived) {
-    actionList.push('Card was archived')
+    return 'Card was archived';
   }
-  if (actionList.length === 0) {
-    return
-  } else {
-    return actionList;
-  }
-}
+  return '';
+};
 
 exports.createCard = createCard;
 exports.getCard = getCard;
 exports.updateCard = updateCard;
+exports.updateCardActions = updateCardActions;

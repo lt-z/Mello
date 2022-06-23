@@ -20,6 +20,10 @@ router.put('/lists/:id', validateUpdatedList, listsController.updateList);
 
 router.post('/cards', validateCard, cardsController.createCard);
 router.get('/cards/:id', cardsController.getCard);
-router.put('/cards/:id', cardsController.updateCard);
+router.put(
+  '/cards/:id',
+  cardsController.updateCardActions,
+  cardsController.updateCard
+);
 
 module.exports = router;

@@ -18,7 +18,7 @@ const CardModal = () => {
   useEffect(() => {
     dispatch(fetchCard(id));
   }, [dispatch, id]);
-  console.log(card);
+
   return (card === undefined || list === undefined) ? null : (
     <div id="modal-container">
       <div className="screen" onClick={handleCloseClick}></div>
