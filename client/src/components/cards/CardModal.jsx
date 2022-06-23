@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { fetchCard } from "../../features/cards/cards";
 import { useHistory } from 'react-router-dom';
 import ModalAside from "./ModalAside";
+import CardTitle from "./CardTitle"
 
 const CardModal = () => {
   const history = useHistory()
@@ -12,7 +13,6 @@ const CardModal = () => {
 
   const list = useSelector((state) => state.lists).find((lst) => lst.cards.some(card => card._id === id));
   const card = useSelector((state) => state.cards).find((card) => card._id === id);
-  const cardTitle = card?.title || "";
 
   const handleCloseClick = () => history.push(`/boards/${card.boardId}`)
 
@@ -27,9 +27,7 @@ const CardModal = () => {
         <i className="x-icon icon close-modal" onClick={handleCloseClick}></i>
         <header>
           <i className="card-icon icon .close-modal"></i>
-          <textarea className="list-title" style={{ height: "45px" }}>
-            {cardTitle}
-          </textarea>
+          <CardTitle card={card}/>
           <p>
             in list <a className="link">{list.title}</a>
             <i className="sub-icon sm-icon"></i>

@@ -41,15 +41,27 @@ const getCard = async (req, res, next) => {
 
 const updateCard = async (req, res, next) => {
   try {
-    const updatedCard = await Card.findByIdAndUpdate(
-      req.params.id,
-      { ...req.body.card, $push: { actions: req.action._id } },
-      {
-        new: true,
-      }
-    );
+    if (req.action) {
+      const updatedCard = await Card.findByIdAndUpdate(
+        req.params.id,
+        { ...req.body.card, $push: { actions: req.action._id } },
+        {
+          new: true,
+        }
+      );
 
-    res.json(updatedCard);
+      res.json(updatedCard);
+    } else {
+      const updatedCard = await Card.findByIdAndUpdate(
+        req.params.id,
+        req.body.card,
+        {
+          new: true,
+        }
+      );
+
+      res.json(updatedCard);
+    }
   } catch (e) {
     new HttpError('Updating card failed, please try again: ' + e, 500);
   }
@@ -67,12 +79,16 @@ const updateCardActions = async (req, res, next) => {
       archived,
       card
     );
-    const newAction = await Action.create({
-      description: actionDescription,
-      cardId: req.params.id,
-    });
-    req.action = newAction;
-    next();
+    if (actionDescription) {
+      const newAction = await Action.create({
+        description: actionDescription,
+        cardId: req.params.id,
+      });
+      req.action = newAction;
+      next();
+    } else {
+      next();
+    }
   } catch (e) {
     new HttpError('Updating card failed, please try again: ' + e, 500);
   }

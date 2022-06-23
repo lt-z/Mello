@@ -71,6 +71,14 @@ const apiClient = {
       logError(e);
     }
   },
+  updateCard: async ({ id, card }) => {
+    try {
+      const { data } = await axios.put(routes.UPDATE_CARD_URL + id, card);
+      return data;
+    } catch (e) {
+      logError(e);
+    }
+  },
 };
 
 export default apiClient;
